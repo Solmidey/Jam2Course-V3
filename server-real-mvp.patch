@@ -1,0 +1,46 @@
+*** Begin Patch
+*** Update File: server/package.json
+@@
+   "dependencies": {
+-    "express": "4.18.2",
+-    "cors": "2.8.5",
+-    "body-parser": "1.20.2",
+-    "uuid": "9.0.0"
++    "express": "4.18.2",
++    "cors": "2.8.5",
++    "body-parser": "1.20.2",
++    "uuid": "9.0.0",
++    "natural": "6.2.3",
++    "ml-kmeans": "2.0.0"
+   }
+ }
+*** End Patch
+*** Begin Patch
+*** Update File: server/index.js
+@@
+-const { generateCourseFromJamUrl } = require('./mockJamProcessor')
++const { generateCourseFromJamUrl } = require('./mockJamProcessor')
+@@
+-app.get('/api/courses', (req,res)=>{
+-  res.json(courses)
+-})
++app.get('/api/courses', (req,res)=>{
++  res.json(courses)
++})
+@@
+ app.post('/api/generate', (req,res)=>{
+   const { jamUrl } = req.body
+   if(!jamUrl) return res.status(400).json({error:'missing jamUrl'})
+   try{
+-    const c = generateCourseFromJamUrl(jamUrl)
+-    courses.unshift(c)
+-    res.json(c)
++    const c = generateCourseFromJamUrl(jamUrl)
++    if(c.topics) c.description += ' — Topics: ' + c.topics.join(' | ')
++    courses.unshift(c)
++    res.json(c)
+   }catch(e){
+     res.status(500).json({error:'invalid url'})
+   }
+ })
+*** End Patch
